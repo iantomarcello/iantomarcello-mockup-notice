@@ -11,39 +11,22 @@ class MockupNotice extends HTMLElement {
 
     let html = `
       <style>
-        @import("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+        @import("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
 
         :host {
-          width: 100%;
-          height: 100vh;
+          max-width: 600px;
+          width: 24px;
+          height: 24px;
           display: block;
-          padding: 20px;
           box-sizing: border-box;
           position: fixed;
           z-index: 99999;
-          top: 0;
-          left: 0;
-          border: none;
+          bottom: 32px;
+          right: 32px;
           font-family: "Montserrat", sans-serif;
-          pointer-events: none;
-          overflow: hidden;
-        }
-
-        section {
-          width: 100%;
-          max-width: 0;
-          margin: 0;
-          padding: 0;
-          min-width: 24px;
-          min-height: 24px;
-          max-height: 24px;
-          position: absolute;
-          top: calc(100% - 32px);
-          left: calc(100% - 32px);
-          transform: translate(-100%, -100%);
+          transition: 0.7s cubic-bezier(0, 1, 0.5, 1);
+          transition-property: right, bottom;
           box-sizing: border-box;
-          background-color: #fbfbfb00;
-          transition: all 0.7s cubic-bezier(0, 1, 0.5, 1);
         }
 
         button {
@@ -51,89 +34,127 @@ class MockupNotice extends HTMLElement {
           height: 24px;
           border: none;
           cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           position: absolute;
           z-index: 1;
           top: 0;
           right: 0;
-          pointer-events: auto;
           border-radius: 50px;
           border: 1px solid rgb(201, 201, 201);
           outline: none;
+          background-color: #fbfbfbc2;
           box-shadow: 0 0px 2px 2px rgba(25, 25, 25, 0.1);
+        }
+
+        button::before {
+          content: "i";
         }
 
         p {
           width: 100%;
+          height: 100%;
           margin: 0;
-          padding: 0;
+          font-size: 14.5px;
+          color: transparent;
+          line-height: 1.4;
           overflow: hidden;
-          position: absolute;
-          font-size: 0.9em;
-          color: #000;
-          line-height: 1.4em;
-          pointer-events: auto;
-          opacity: 0;
-          transition: all 0.7s cubic-bezier(0, 1, 0.5, 1);
-          overflow: hidden;
+          border-radius: 50px;
         }
 
-        :host([open]) section {
-          max-width: 600px;
+        a {
+          color: #1F3972;
+          font-weight: 600;
+        }
+
+        a:visited {
+          color: #5163A1;
+          font-weight: 400;
+        }
+
+        :host([open]) {
+          width: calc(100% - 40px);
+          height: auto;
           padding: 32px;
-          max-height: 100vh;
-          position: relative;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background-color: #fbfbfbe5;
-          box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.2);
+          bottom: 50%;
+          right: 50%;
+          transform: translate(50%, 50%);
+          background-color: #fbfbfbfc;
+          box-shadow: 0 2px 2px rgba(25, 25, 25, 0.2);
         }
 
         :host([open]) p {
+          color: #565656;
+          height: auto;
           position: relative;
-          opacity: 1;
+          border-radius: 0;
         }
 
         :host([open]) button {
           top: -12px;
           right: -12px;
+          background-color: white;
           box-shadow: 0 0px 2px 2px rgba(25, 25, 25, 0);
         }
+
+        :host([open]) button::before {
+          content: "";
+          width: 10px;
+          height: 1px;
+          display: block;
+          background-color: #000;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        :host([open]) button::after {
+          content: "";
+          width: 10px;
+          height: 1px;
+          display: block;
+          background-color: #000;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+
       </style>
 
-      <section>
-        <button type="button">
-          <span>i</span>
-        </button>
-        <p>
-          You are viewing a mockup site of
-          <a target="_blank"><slot></slot></a>,
-          which may or may not have modifications or alterations from the
-          actual site to demostrate a certain functionality or purpose.
-          <br>
-          <br>
-          In any case, enjoy what you see. 😄
-          <br>
-          <br>
-          <br>
-            <small>
-              Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
-              <br>
-              Check out my <a href="https://iantomarcello.github" target="_blank">GitHub</a>.
-            </small>
-        </p>
-      </section>
+      <button type="button">
+      </button>
+      <p>
+        You are viewing a mockup site of
+        <a target="_blank"><slot></slot></a>,
+        which may or may not have modifications or alterations from the
+        actual site to demostrate a certain functionality or purpose.
+        <br>
+        <br>
+        In any case, enjoy what you see. 😄
+        <br>
+        <br>
+        <br>
+          <small>
+            Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
+            <br>
+            Check out my <a href="https://iantomarcello.github" target="_blank">GitHub</a>.
+          </small>
+      </p>
     `;
 
     let parsed = new DOMParser().parseFromString(html, "text/html");
     let style = parsed.head.firstElementChild;
-    let body = parsed.body.firstElementChild;
+    let body = parsed.body;
 
     body.querySelector('button').addEventListener("click", ev => toggle());
     body.querySelector('a').href = this.getAttribute("href");
 
     shadow.appendChild(style);
-    shadow.appendChild(body);
+    [...body.children].forEach(child => shadow.appendChild(child))
   }
 }
 customElements.define("iantomarcello-mockup-notice", MockupNotice);
