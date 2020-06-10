@@ -1,12 +1,18 @@
-import { LitElement, html, css } from 'lit-element';
+class MockupNotice extends HTMLElement {
+  constructor() {
+    super();
+    let shadow = this.attachShadow({mode: 'open'});
 
-class MockupNotice extends LitElement {
-  static get styles() {
-    return [
-      css`
+    let toggle = () => {
+      !this.hasAttribute("open") ?
+        this.setAttribute("open", "") :
+        this.removeAttribute("open");
+    };
+
+    let html = `
+      <style>
         @import("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
-      `,
-      css`
+
         :host {
           width: 100%;
           height: 100vh;
@@ -93,38 +99,15 @@ class MockupNotice extends LitElement {
           right: -12px;
           box-shadow: 0 0px 2px 2px rgba(25, 25, 25, 0);
         }
-      `,
-    ]
-  }
+      </style>
 
-  static get properties() {
-    return {
-      open: { type: Boolean, reflect: true },
-      href: { type: String, reflect: true },
-      link: { type: String, reflect: true },
-    }
-  }
-
-  constructor() {
-    super();
-    this.open = false;
-    this.href = "";
-    this.link = "link";
-  }
-
-  toggle() {
-    this.open = !this.open;
-  }
-
-  render() {
-    return html`
       <section>
-        <button type="button" @click=${this.toggle}>
+        <button type="button">
           <span>i</span>
         </button>
         <p>
           You are viewing a mockup site of
-          <a .href="${this.href}" target="_blank"><slot>${this.link}</slot></a>,
+          <a target="_blank"><slot></slot></a>,
           which may or may not have modifications or alterations from the
           actual site to demostrate a certain functionality or purpose.
           <br>
@@ -141,6 +124,16 @@ class MockupNotice extends LitElement {
         </p>
       </section>
     `;
+
+    let parsed = new DOMParser().parseFromString(html, "text/html");
+    let style = parsed.head.firstElementChild;
+    let body = parsed.body.firstElementChild;
+
+    body.querySelector('button').addEventListener("click", ev => toggle());
+    body.querySelector('a').href = this.getAttribute("href");
+
+    shadow.appendChild(style);
+    shadow.appendChild(body);
   }
 }
 customElements.define("iantomarcello-mockup-notice", MockupNotice);
