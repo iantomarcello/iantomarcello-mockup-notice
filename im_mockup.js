@@ -23,7 +23,7 @@ class MockupNotice extends HTMLElement {
           max-width: 600px;
           width: 24px;
           height: 24px;
-          display: block;
+          display: block !important;
           box-sizing: border-box;
           position: fixed;
           z-index: 99999;
