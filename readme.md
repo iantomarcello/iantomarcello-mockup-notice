@@ -1,8 +1,9 @@
 A small web component used across my mockup sites as notice that it is a mockup site.
 This readme is here in case I forgot how to use this gimmick.
 
-It doubles or is similar to an anchor tag `<a>` where it accepts a `href` attribute as a link, and the inner HTML content (preferable just a string) is the text which the link links to.
-
-Confusing?
-
-Just remember, **it doubles as a an anchor tag**, the rest will fall into place.
+It doubles as an anchor tag. <br>
+`href` attribute sets the link to the given value of this property.
+Like the `href` of an`<a>` tag. <br>
+`label` attribute sets the label of the link given value of this property.
+Like the innerHTML of an`<a>` tag. <br>
+The innerHTML of this is a `<slot>` of an extra description if any.

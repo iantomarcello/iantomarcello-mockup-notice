@@ -9,9 +9,15 @@ class MockupNotice extends HTMLElement {
         this.removeAttribute("open");
     };
 
+    let getLabel = () => {
+      return !this.hasAttribute("label").length ?
+        "Mockup" :
+        this.hasAttribute("label");
+    };
+
     let html = `
       <style>
-        @import("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
+        @import("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap");
 
         :host {
           max-width: 600px;
@@ -27,6 +33,11 @@ class MockupNotice extends HTMLElement {
           transition: 0.7s cubic-bezier(0, 1, 0.5, 1);
           transition-property: right, bottom;
           box-sizing: border-box;
+        }
+
+        :host([left]) {
+          right: initial;
+          left: 32px;
         }
 
         button {
@@ -59,6 +70,7 @@ class MockupNotice extends HTMLElement {
           font-size: 14.5px;
           color: transparent;
           line-height: 1.4;
+          font-weight: 500;
           overflow: hidden;
           border-radius: 50px;
         }
@@ -122,6 +134,11 @@ class MockupNotice extends HTMLElement {
           transform: translate(-50%, -50%) rotate(-45deg);
         }
 
+        slot {
+          margin-block-start: 2em;
+          margin-block-end: 2em;
+          display: block;
+        }
 
       </style>
 
@@ -129,20 +146,19 @@ class MockupNotice extends HTMLElement {
       </button>
       <p>
         You are viewing a mockup site of
-        <a target="_blank"><slot></slot></a>,
+        <a target="_blank">${getLabel()}</a>,
         which may or may not have modifications or alterations from the
         actual site to demostrate a certain functionality or purpose.
-        <br>
-        <br>
+
+        <slot></slot>
+
         In any case, enjoy what you see. 😄
-        <br>
-        <br>
-        <br>
-          <small>
-            Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
-            <br>
-            Check out my <a href="https://iantomarcello.github" target="_blank">GitHub</a>.
-          </small>
+        <br><br>
+        <small>
+          Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
+          <br>
+          Check out my <a href="https://iantomarcello.github" target="_blank">GitHub</a>.
+        </small>
       </p>
     `;
 
