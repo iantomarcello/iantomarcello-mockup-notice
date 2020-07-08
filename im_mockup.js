@@ -10,9 +10,9 @@ class MockupNotice extends HTMLElement {
     };
 
     let getLabel = () => {
-      return !this.hasAttribute("label").length ?
+      return !this.hasAttribute("label") ?
         "Mockup" :
-        this.hasAttribute("label");
+        this.getAttribute("label");
     };
 
     let html = `
@@ -29,7 +29,7 @@ class MockupNotice extends HTMLElement {
           z-index: 99999;
           bottom: 32px;
           right: 32px;
-          font-family: "Montserrat", sans-serif;
+          font-family: "Montserrat", sans-serif !important;
           transition: 0.7s cubic-bezier(0, 1, 0.5, 1);
           transition-property: right, bottom;
           box-sizing: border-box;
@@ -68,6 +68,7 @@ class MockupNotice extends HTMLElement {
           height: 100%;
           margin: 0;
           font-size: 14.5px;
+          font-family: inherit;
           color: transparent;
           line-height: 1.4;
           font-weight: 500;
@@ -77,6 +78,7 @@ class MockupNotice extends HTMLElement {
 
         a {
           color: #1F3972;
+          font-family: inherit;
           font-weight: 600;
         }
 
@@ -135,6 +137,7 @@ class MockupNotice extends HTMLElement {
         }
 
         slot {
+          font-family: inherit;
           margin-block-start: 2em;
           margin-block-end: 2em;
           display: block;
@@ -145,9 +148,8 @@ class MockupNotice extends HTMLElement {
       <button type="button">
       </button>
       <p>
-        You are viewing a mockup site of
-        <a target="_blank">${getLabel()}</a>,
-        which may or may not have modifications or alterations from the
+        You are viewing a mockup site of <a target="_blank">${getLabel()}</a>, <br>
+        which may or may not have modifications or alterations from the <br>
         actual site to demostrate a certain functionality or purpose.
 
         <slot></slot>
