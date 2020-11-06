@@ -17,7 +17,7 @@ class MockupNotice extends HTMLElement {
 
     let html = `
       <style>
-        @import("https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap");
+        @import("https://fonts.googleapis.com/css2?family=Sora:wght@400;600&display=swap");
 
         :host {
           max-width: 600px;
@@ -29,7 +29,7 @@ class MockupNotice extends HTMLElement {
           z-index: 99999;
           bottom: 32px;
           right: 32px;
-          font-family: "Montserrat", sans-serif !important;
+          font-family: Sora, sans-serif !important;
           transition: 0.7s cubic-bezier(0, 1, 0.5, 1);
           transition-property: right, bottom;
           box-sizing: border-box;
@@ -63,7 +63,7 @@ class MockupNotice extends HTMLElement {
           content: "i";
         }
 
-        p {
+        div {
           width: 100%;
           height: 100%;
           margin: 0;
@@ -71,9 +71,9 @@ class MockupNotice extends HTMLElement {
           font-family: inherit;
           color: transparent;
           line-height: 1.4;
-          font-weight: 500;
           overflow: hidden;
           border-radius: 50px;
+          visibility: hidden;
         }
 
         a {
@@ -98,11 +98,12 @@ class MockupNotice extends HTMLElement {
           box-shadow: 0 2px 2px rgba(25, 25, 25, 0.2);
         }
 
-        :host([open]) p {
+        :host([open]) div {
           color: #565656;
           height: auto;
           position: relative;
           border-radius: 0;
+          visibility: visible;
         }
 
         :host([open]) button {
@@ -138,30 +139,40 @@ class MockupNotice extends HTMLElement {
 
         slot {
           font-family: inherit;
+          font-size: inherit;
           margin-block-start: 2em;
           margin-block-end: 2em;
           display: block;
+        }
+
+        ::slotted(a) {
+          display: inline-block !important;
+          font-family: Sora;
+          font-size: inherit;
         }
 
       </style>
 
       <button type="button">
       </button>
-      <p>
-        You are viewing a mockup site of <a target="_blank">${getLabel()}</a>, <br>
-        which may or may not have modifications or alterations from the <br>
-        actual site to demostrate a certain functionality or purpose.
+      <div>
+        <p>
+          You are viewing a mockup site of <a target="_blank">${getLabel()}</a>,
+          which may or may not have modifications or alterations from the
+          actual site to demostrate a certain functionality or purpose.
+        </p>
 
         <slot></slot>
 
-        In any case, enjoy what you see. 😄
-        <br><br>
-        <small>
-          Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
-          <br>
-          Check out my <a href="https://iantomarcello.github" target="_blank">GitHub</a>.
-        </small>
-      </p>
+        <p>In any case, enjoy what you see. 😄</p>
+        <p>
+          <small>
+            Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
+            <br>
+            Check out my <a href="https://iantomarcello.github" target="_blank">GitHub</a>.
+          </small>
+        </p>
+      </div>
     `;
 
     let parsed = new DOMParser().parseFromString(html, "text/html");
