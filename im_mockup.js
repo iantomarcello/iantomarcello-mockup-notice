@@ -90,7 +90,7 @@ class MockupNotice extends HTMLElement {
         :host([open]) {
           width: calc(100% - 40px);
           height: auto;
-          padding: 32px;
+          padding: 20px 32px;
           bottom: 50%;
           right: 50%;
           transform: translate(50%, 50%);
