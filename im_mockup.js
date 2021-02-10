@@ -4,15 +4,15 @@ class MockupNotice extends HTMLElement {
     let shadow = this.attachShadow({mode: 'open'});
 
     let toggle = () => {
-      !this.hasAttribute("open") ?
-        this.setAttribute("open", "") :
-        this.removeAttribute("open");
+      !this.hasAttribute('open') ?
+        this.setAttribute('open', '') :
+        this.removeAttribute('open');
     };
 
     let getLabel = () => {
-      return !this.hasAttribute("label") ?
-        "Mockup" :
-        this.getAttribute("label");
+      return !this.hasAttribute('label') ?
+        'Mockup' :
+        this.getAttribute('label');
     };
 
     let html = `
@@ -157,7 +157,7 @@ class MockupNotice extends HTMLElement {
       </button>
       <div>
         <p>
-          You are viewing a mockup site of <a target="_blank">${getLabel()}</a>,
+          You are viewing a mockup site of <a target="_blank">${getLabel()}</a>, 
           which may or may not have modifications or alterations from the
           actual site to demostrate a certain functionality or purpose.
         </p>
@@ -175,15 +175,15 @@ class MockupNotice extends HTMLElement {
       </div>
     `;
 
-    let parsed = new DOMParser().parseFromString(html, "text/html");
+    let parsed = new DOMParser().parseFromString(html, 'text/html');
     let style = parsed.head.firstElementChild;
     let body = parsed.body;
 
-    body.querySelector('button').addEventListener("click", ev => toggle());
-    body.querySelector('a').href = this.getAttribute("href");
+    body.querySelector('button').addEventListener('click', ev => toggle());
+    body.querySelector('a').href = this.getAttribute('href');
 
     shadow.appendChild(style);
     [...body.children].forEach(child => shadow.appendChild(child))
   }
 }
-customElements.define("iantomarcello-mockup-notice", MockupNotice);
+customElements.define('iantomarcello-mockup-notice', MockupNotice);
