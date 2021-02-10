@@ -169,7 +169,7 @@ class MockupNotice extends HTMLElement {
           <small>
             Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
             <br>
-            Check out my <a href="https://iantomarcello.github" target="_blank">GitHub</a>.
+            Check out my <a href="https://github.com/iantomarcello" target="_blank">GitHub</a>.
           </small>
         </p>
       </div>
