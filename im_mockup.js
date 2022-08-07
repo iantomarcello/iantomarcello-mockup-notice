@@ -179,11 +179,12 @@ class MockupNotice extends HTMLElement {
     let style = parsed.head.firstElementChild;
     let body = parsed.body;
 
-    body.querySelector('button').addEventListener('click', ev => toggle());
-    body.querySelector('a').href = this.getAttribute('href');
+    body.querySelector('button')?.addEventListener('click', ev => toggle());
+    const href = this.getAttribute('href');
+    href && body.querySelector('a')?.setAttribute('href', href);
 
-    shadow.appendChild(style);
-    [...body.children].forEach(child => shadow.appendChild(child))
+    style && shadow.appendChild(style);
+    [...body.children].forEach(child => shadow.appendChild(child));
   }
 }
 customElements.define('iantomarcello-mockup-notice', MockupNotice);

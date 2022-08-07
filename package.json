@@ -3,15 +3,12 @@
   "version": "1.0.0",
   "description": "Universal mockup web component for my mockup sites.",
   "main": "script.js",
-  "dependencies": {
-    "es-dev-server": "^1.54.1",
-    "lit-element": "^2.3.1"
-  },
+  "dependencies": {},
   "devDependencies": {},
   "scripts": {
     "start": "es-dev-server --open",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "terser -c --module im_mockup.js -o im_mockup.min.js"
   },
-  "author": "",
+  "author": "Ian Yong (iantomarcello)",
   "license": "ISC"
 }
