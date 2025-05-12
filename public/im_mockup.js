@@ -4,10 +4,15 @@ class MockupNotice extends HTMLElement {
     let shadow = this.attachShadow({mode: 'open'});
 
     let toggle = () => {
-      !this.hasAttribute('open') ?
-        this.setAttribute('open', '') :
-        this.removeAttribute('open');
+      const dialog = shadow.querySelector('dialog');
+      if (!dialog) return;
+      !dialog.open
+        ? shadow.querySelector('dialog')?.showModal()
+        : shadow.querySelector('dialog')?.close();
     };
+
+    // TODO: Close button when dialog open
+    // TODO: Simple animation
 
     let getLabel = () => {
       return !this.hasAttribute('label') ?
@@ -20,24 +25,38 @@ class MockupNotice extends HTMLElement {
         @import("https://fonts.googleapis.com/css2?family=Sora:wght@400;600&display=swap");
 
         :host {
-          max-width: 600px;
-          width: 24px;
-          height: 24px;
-          display: block !important;
-          box-sizing: border-box;
-          position: fixed;
-          z-index: 99999;
-          bottom: 32px;
-          right: 32px;
-          font-family: Sora, sans-serif !important;
-          transition: 0.7s cubic-bezier(0, 1, 0.5, 1);
-          transition-property: right, bottom;
-          box-sizing: border-box;
+          display: block;
+          font-family: Sora;
         }
 
-        :host([left]) {
-          right: initial;
-          left: 32px;
+        button:has(+ [open]) {
+          background-color: white;
+          box-shadow: 0 0px 2px 2px rgba(25, 25, 25, 0);
+          position: fixed;
+          position-anchor: --article;
+          left: anchor(right);
+          bottom: anchor(top);
+
+          &::before
+          &::after, {
+            content: "";
+            width: 10px;
+            height: 1px;
+            display: block;
+            background-color: #000;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+          }
+
+          &::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+          }
+        }
+
+        dialog {
+          padding: 20px;
         }
 
         button {
@@ -48,32 +67,31 @@ class MockupNotice extends HTMLElement {
           display: flex;
           align-items: center;
           justify-content: center;
-          position: absolute;
+          position: fixed;
           z-index: 1;
-          top: 0;
-          right: 0;
+          bottom: 20px;
+          right: 20px;
           border-radius: 50px;
           border: 1px solid rgb(201, 201, 201);
           outline: none;
           background-color: #fbfbfbc2;
           box-shadow: 0 0px 2px 2px rgba(25, 25, 25, 0.1);
+
+          &::before {
+            content: "i";
+          }
         }
 
-        button::before {
-          content: "i";
-        }
-
-        div {
+        article {
+          max-width: 600px;
           width: 100%;
           height: 100%;
           margin: 0;
           font-size: 14.5px;
           font-family: inherit;
-          color: transparent;
+          color: #565656;
           line-height: 1.4;
-          overflow: hidden;
-          border-radius: 50px;
-          visibility: hidden;
+          anchor-name: --article;
         }
 
         a {
@@ -85,56 +103,6 @@ class MockupNotice extends HTMLElement {
         a:visited {
           color: #5163A1;
           font-weight: 400;
-        }
-
-        :host([open]) {
-          width: calc(100% - 40px);
-          height: auto;
-          padding: 20px 32px;
-          bottom: 50%;
-          right: 50%;
-          transform: translate(50%, 50%);
-          background-color: #fbfbfbfc;
-          box-shadow: 0 2px 2px rgba(25, 25, 25, 0.2);
-        }
-
-        :host([open]) div {
-          color: #565656;
-          height: auto;
-          position: relative;
-          border-radius: 0;
-          visibility: visible;
-        }
-
-        :host([open]) button {
-          top: -12px;
-          right: -12px;
-          background-color: white;
-          box-shadow: 0 0px 2px 2px rgba(25, 25, 25, 0);
-        }
-
-        :host([open]) button::before {
-          content: "";
-          width: 10px;
-          height: 1px;
-          display: block;
-          background-color: #000;
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%) rotate(45deg);
-        }
-
-        :host([open]) button::after {
-          content: "";
-          width: 10px;
-          height: 1px;
-          display: block;
-          background-color: #000;
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%) rotate(-45deg);
         }
 
         slot {
@@ -153,38 +121,43 @@ class MockupNotice extends HTMLElement {
 
       </style>
 
-      <button type="button">
-      </button>
-      <div>
-        <p>
-          You are viewing a mockup site of <a target="_blank">${getLabel()}</a>, 
-          which may or may not have modifications or alterations from the
-          actual site to demostrate a certain functionality or purpose.
-        </p>
+      <button id="toggler" type="button" arial-label="Toggle IantoMarcello mockup dialog"></button>
 
-        <slot></slot>
-
-        <p>In any case, enjoy what you see. 😄</p>
-        <p>
-          <small>
-            Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
-            <br>
-            Check out my <a href="https://github.com/iantomarcello" target="_blank">GitHub</a>.
-          </small>
-        </p>
-      </div>
+      <dialog>
+        <article>
+          <header>
+            <p>
+              You are viewing a mockup site of <a target="_blank">${getLabel()}</a>, 
+              which may or may not have modifications or alterations from the 
+              actual site to demostrate a certain functionality or purpose.
+            </p>
+          </header>
+          <section><slot></slot></section>
+          <footer>
+            <p>In any case, enjoy what you see. 😄</p>
+            <p>
+              <small>
+                Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
+                <br>
+                Check out my <a href="https://github.com/iantomarcello" target="_blank">GitHub</a>.
+              </small>
+            </p>
+          </footer>
+        </article>
+      </dialog>
     `;
 
     let parsed = new DOMParser().parseFromString(html, 'text/html');
     let style = parsed.head.firstElementChild;
     let body = parsed.body;
 
-    body.querySelector('button')?.addEventListener('click', ev => toggle());
+    body.querySelector('#toggler')?.addEventListener('click', (ev) => toggle());
     const href = this.getAttribute('href');
     href && body.querySelector('a')?.setAttribute('href', href);
 
     style && shadow.appendChild(style);
     [...body.children].forEach(child => shadow.appendChild(child));
+    shadow.querySelector('dialog')?.showModal();
   }
 }
 customElements.define('iantomarcello-mockup-notice', MockupNotice);
