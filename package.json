@@ -1,13 +1,11 @@
 {
   "name": "iantomarcello-mockup-notice",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Universal mockup web component for my mockup sites.",
-  "main": "script.js",
-  "dependencies": {},
-  "devDependencies": {},
+  "main": "serve.js",
+  "type": "module",
   "scripts": {
-    "start": "es-dev-server --open",
-    "build": "terser -c --module im_mockup.js -o im_mockup.min.js"
+    "start": "node ."
   },
   "author": "Ian Yong (iantomarcello)",
   "license": "ISC"
