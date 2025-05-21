@@ -28,6 +28,10 @@ createServer(async (req, res) => {
       file = await readFile('./public/im_mockup.min.js');
       res.writeHead(200, { 'content-type': 'text/javascript' });
       break;
+    case '/im_mockup.js':
+      file = await readFile('./public/im_mockup.js');
+      res.writeHead(200, { 'content-type': 'text/javascript' });
+      break;
     case '/needs_reload':
       res.writeHead(200, { 'content-type': 'application/json' });
       res.write(JSON.stringify({ needsReload }));
