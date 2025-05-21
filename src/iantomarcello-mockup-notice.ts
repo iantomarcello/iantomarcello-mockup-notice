@@ -38,9 +38,61 @@ export class ImMockupNotice extends LitElement {
         --size: 2rem;
         width: min(45px, var(--size));
         aspect-ratio: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: block;
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        border: none;
+        opacity: 0.5;
+        cursor: pointer;
+        filter: drop-shadow(0 0 2px #33333333);
+        background-color: transparent;
+        transition: opacity 0.1s ease-in-out;
+        outline: 0;
+
+        &::before, &::after {
+          content: "";
+          width: 100%;
+          aspect-ratio: 1;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          border-radius: 50%;
+          translate: -50% -50%;
+          transition: translate 0.6s cubic-bezier(.72,.01,.24,.98);
+        }
+
+        &::after {
+          content: "i";
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: var(--colour_secondary);
+        }
+
+        &::before {
+          outline: 2px solid var(--colour_secondary);
+          outline-offset: 3px;
+          border-radius: 50%;
+          transition-delay: 0.1s
+        }
+
+        &:hover {
+          opacity: 1;
+        }
+
+        &:has(+ [open]) {
+          &::before, &::after {
+            translate: 120% 120%;
+          }
+        }
+      }
+
+      #dialogCloseButton {
+        --size: 4rem;
+        width: min(62px, var(--size));
+        aspect-ratio: 1;
+        display: block;
         position: fixed;
         bottom: 1rem;
         right: 1rem;
@@ -72,7 +124,7 @@ export class ImMockupNotice extends LitElement {
   render() {
     return html`
       <div class="wrapper">
-        <button id="promptButton" type="button" aria-label="prompt mock notice" @click="${() => this.dialog.showModal()}">i</button>
+        <button id="promptButton" type="button" aria-label="prompt mock notice" @click="${() => this.dialog.showModal()}"></button>
         <dialog id="dialog">
           <button id="dialogCloseButton"></button>
           <article class="dialog-content">
