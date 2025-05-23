@@ -88,30 +88,112 @@ export class ImMockupNotice extends LitElement {
         }
       }
 
+      #dialog {
+        // width: 90vw;
+        // height: 60vh;
+        font-size: 1rem;
+        font-family: "Sora", sans-serif;
+        color: var(--colour_primary_dark);
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        margin-block-start: auto;
+        margin-inline-start: auto;
+
+        --o: 100%;
+        --path: "M1296 576H0.871094C320.051 222.305 782.065 0 1296 0V576Z";
+        --path: "M1198.5 0C1223.51 0 1248.35 0.719409 1273 2.13867V834H0.902344C180.937 347.092 649.2 0 1198.5 0Z";
+        // clip-path: path(var(--path));
+        // clip-path: path(var(--path));
+        // clip-path: circle(60vh at right bottom); 
+
+        @starting-style {
+          
+        }
+      }
+
+      .dialog-content {
+        --size: 460px;
+        --shape_inside: var(--colour_secondary);
+        --shape_outside: transparent;
+        --shape: radial-gradient(
+          circle at right bottom,
+          var(--colour_secondary),
+          var(--colour_secondary) calc(var(--size)),
+          transparent calc(var(--size)  + 1px)
+        );
+        width: var(--size);
+        height: var(--size);
+        background-image: var(--shape);
+        padding-right: 1ch;
+
+        &::before, &::after {
+          content: "";
+          shape-margin: 5%;
+        }
+
+        &::before {
+          --path: polygon(100% 0, 100% 100%, 0 100%);
+          width: 100%;
+          height: 100%;
+          float: left;
+          shape-outside: var(--shape);
+          shape-outside: radial-gradient(
+            circle at right bottom,
+            transparent,
+            transparent calc(var(--size)),
+            var(--colour_secondary) calc(var(--size)  + 1px)
+          );
+          shape-image-threshold: 0.1;
+        }
+
+        header {
+            padding-top: 1.8em;
+            text-align: right;
+        }
+      }
+
       #dialogCloseButton {
         --size: 4rem;
         width: min(62px, var(--size));
         aspect-ratio: 1;
         display: block;
+        padding: 1rem;
         position: fixed;
         bottom: 1rem;
         right: 1rem;
-        background-color: var(--colour_secondary);
         border-radius: 50%;
         border: none;
-        outline: 2px solid var(--colour_secondary);
-        outline-offset: 3px;
-        opacity: 0.5;
+        background-color: var(--colour_secondary);
         cursor: pointer;
         filter: drop-shadow(0 0 2px #33333333);
-        transition: opacity 0.1s ease-in-out,
-          translate 0.66s cubic-bezier(.02,-0.01,1,.01);
+        translate: 120% 120%;
+        transition: scale 0.2s linear,
+          translate 0.6s cubic-bezier(.72,.01,.24,.98)
+        ;
+
         &:hover {
-          opacity: 1;
+          scale: 1.1;
         }
 
-        &:has(+ [open]) {
-          translate: 200% 200%;
+        &::before, &::after {
+          content: "";
+          width: 40%;
+          height: 3px;
+          border-radius: 50px;
+          background-color: var(--colour_primary_dark);
+          aspect-ratio: 1;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          translate: -50% -50%;
+        }
+        &::before { rotate: 45deg; }
+        &::after { rotate: -45deg; }
+
+        [open] & {
+          translate: 0% 0%;
         }
       }
     `
@@ -126,7 +208,7 @@ export class ImMockupNotice extends LitElement {
       <div class="wrapper">
         <button id="promptButton" type="button" aria-label="prompt mock notice" @click="${() => this.dialog.showModal()}"></button>
         <dialog id="dialog">
-          <button id="dialogCloseButton"></button>
+          <button id="dialogCloseButton" @click="${() => this.dialog.close()}"></button>
           <article class="dialog-content">
             <header>
               <p>
@@ -137,11 +219,10 @@ export class ImMockupNotice extends LitElement {
             </header>
             <section><slot></slot></section>
             <footer>
-              <p>In any case, enjoy what you see. 😄</p>
+              <p>In any case, enjoy what you see. 😁</p>
               <p>
                 <small>
                   Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
-                  <br>
                   Check out my <a href="https://github.com/iantomarcello" target="_blank">GitHub</a>.
                 </small>
               </p>
