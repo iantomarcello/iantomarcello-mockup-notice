@@ -16,6 +16,7 @@ export class ImMockupNotice extends LitElement {
   static styles = [
     css`
       :host {
+        --size: 460px;
         --colour_primary: #394c8c;
         --colour_primary_light: #8190D3;
         --colour_primary_dark: #1F3972;
@@ -32,6 +33,11 @@ export class ImMockupNotice extends LitElement {
         display: block;
         position: relative;
         z-index: 10000000;
+        container-type: inline-size;
+      }
+
+      * {
+        box-sizing: border-box;
       }
 
       #promptButton {
@@ -101,20 +107,12 @@ export class ImMockupNotice extends LitElement {
         margin-block-start: auto;
         margin-inline-start: auto;
 
-        --o: 100%;
-        --path: "M1296 576H0.871094C320.051 222.305 782.065 0 1296 0V576Z";
-        --path: "M1198.5 0C1223.51 0 1248.35 0.719409 1273 2.13867V834H0.902344C180.937 347.092 649.2 0 1198.5 0Z";
-        // clip-path: path(var(--path));
-        // clip-path: path(var(--path));
-        // clip-path: circle(60vh at right bottom); 
-
         @starting-style {
           
         }
       }
 
       .dialog-content {
-        --size: 460px;
         --shape_inside: var(--colour_secondary);
         --shape_outside: transparent;
         --shape: radial-gradient(
@@ -125,16 +123,23 @@ export class ImMockupNotice extends LitElement {
         );
         width: var(--size);
         height: var(--size);
-        background-image: var(--shape);
+        mask-image: var(--shape);
+        position: fixed;
+        bottom: 0;
+        right: 0;
         padding-right: 1ch;
+        padding-left: 1ch;
+        overflow: auto;
+
+        @container (width < 460px) {
+          --size: 100vw;
+        }
 
         &::before, &::after {
           content: "";
-          shape-margin: 5%;
         }
 
         &::before {
-          --path: polygon(100% 0, 100% 100%, 0 100%);
           width: 100%;
           height: 100%;
           float: left;
@@ -146,6 +151,17 @@ export class ImMockupNotice extends LitElement {
             var(--colour_secondary) calc(var(--size)  + 1px)
           );
           shape-image-threshold: 0.1;
+          shape-margin: 5%;
+        }
+
+        &::after {
+          width: 100%;
+          height: 100%;
+          background-image: var(--shape);
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: -1;
         }
 
         header {
