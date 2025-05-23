@@ -30,6 +30,8 @@ export class ImMockupNotice extends LitElement {
         --colour_secondary_on: #000;
         --colour_secondary_light_on: #000;
         --colour_secondary_dark_on: #000;
+        --scroll_shape_outside_margin_max: 50%;
+
         display: block;
         position: relative;
         z-index: 10000000;
@@ -142,6 +144,10 @@ export class ImMockupNotice extends LitElement {
         &::before {
           width: 100%;
           height: 100%;
+        }
+
+        /* The shape -outside to keep text inside. */
+        &::before {
           float: left;
           shape-outside: var(--shape);
           shape-outside: radial-gradient(
@@ -152,8 +158,13 @@ export class ImMockupNotice extends LitElement {
           );
           shape-image-threshold: 0.1;
           shape-margin: 5%;
+          animation-name: moveShapeOutside;
+          animation-duration: 1ms; /* Firefox requires this to apply the animation */
+          animation-direction: alternate;
+          animation-timeline: scroll(block nearest);
         }
 
+        /* The sector shape */
         &::after {
           width: 100%;
           height: 100%;
@@ -212,6 +223,23 @@ export class ImMockupNotice extends LitElement {
           translate: 0% 0%;
         }
       }
+
+      /* Move shape-outside on scroll. */
+      /* TODO: Not perfect */
+      @keyframes moveShapeOutside {
+        0% { margin-top: 0; }
+        10% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.1); }
+        20% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.2); }
+        30% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.3); }
+        40% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.4); }
+        50% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.5); }
+        60% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.6); }
+        70% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.7); }
+        80% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.8); }
+        90% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.9); }
+        100% { margin-top: var(--scroll_shape_outside_margin_max); }
+      }
+
     `
   ];
 
