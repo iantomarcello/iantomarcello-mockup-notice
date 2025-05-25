@@ -4,9 +4,31 @@
   "description": "Universal mockup web component for my mockup sites.",
   "main": "serve.js",
   "type": "module",
-  "scripts": {
-    "start": "node ."
-  },
   "author": "Ian Yong (iantomarcello)",
-  "license": "ISC"
+  "license": "ISC",
+  "exports": {
+    ".": {
+      "import": "./dist/svg-import.es.js",
+      "require": "./dist/svg-import.umd.js"
+    }
+  },
+  "types": "types/svg-import.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "start": "vite --port 6958",
+    "dev": "vite",
+    "build": "npm run build:default && npm run build:browser",
+    "build:default": "tsc && vite build",
+    "build:browser": "tsc && vite build -c vite.browser.config.ts"
+  },
+  "dependencies": {
+    "lit": "^3.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
 }
