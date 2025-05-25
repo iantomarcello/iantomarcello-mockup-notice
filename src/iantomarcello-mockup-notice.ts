@@ -17,6 +17,8 @@ export class ImMockupNotice extends LitElement {
     css`
       :host {
         --size: 460px;
+        --scroll_shape_outside_margin_max: 50%;
+
         --colour_primary: #394c8c;
         --colour_primary_light: #8190D3;
         --colour_primary_dark: #1F3972;
@@ -30,7 +32,6 @@ export class ImMockupNotice extends LitElement {
         --colour_secondary_on: #000;
         --colour_secondary_light_on: #000;
         --colour_secondary_dark_on: #000;
-        --scroll_shape_outside_margin_max: 50%;
 
         display: block;
         position: relative;
@@ -53,7 +54,6 @@ export class ImMockupNotice extends LitElement {
         border: none;
         opacity: 0.5;
         cursor: pointer;
-        filter: drop-shadow(0 0 2px #33333333);
         background-color: transparent;
         transition: opacity 0.1s ease-in-out;
         outline: 0;
@@ -177,45 +177,57 @@ export class ImMockupNotice extends LitElement {
       }
 
       #dialogCloseButton {
-        --size: 4rem;
-        width: min(62px, var(--size));
+        width: 86px;
         aspect-ratio: 1;
         display: block;
-        padding: 1rem;
-        position: fixed;
-        bottom: 1rem;
-        right: 1rem;
-        border-radius: 50%;
-        border: none;
-        background-color: var(--colour_secondary);
+        padding: 0;
         cursor: pointer;
-        filter: drop-shadow(0 0 2px #33333333);
+        filter: drop-shadow(1px 1px 1px #33333366);
+        background-color: transparent;
+        color: var(--colour_secondary);
+        border: 0;
+        border-top-left-radius: 100%;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: 1;
+        overflow: hidden;
         translate: 120% 120%;
-        transition: scale 0.2s linear,
-          translate 0.6s cubic-bezier(.72,.01,.24,.98)
-        ;
+        transition: translate 0.6s cubic-bezier(.72,.01,.24,.98),
+                    opacity 0.1s ease-in-out;
+        opacity: 0.5;
 
-        &:hover {
-          scale: 1.1;
-        }
-
-        &::before, &::after {
-          content: "";
-          width: 40%;
-          height: 3px;
-          border-radius: 50px;
-          background-color: var(--colour_primary_dark);
-          aspect-ratio: 1;
+        svg {
+          width: 100%;
           position: absolute;
-          top: 50%;
-          left: 50%;
-          translate: -50% -50%;
+          height: 100%;
+          bottom: 0;
+          right: 0;
+          transition: all 0.1s ease-in-out;
         }
-        &::before { rotate: 45deg; }
-        &::after { rotate: -45deg; }
+
+        path {
+          fill: transparent;
+        }
+
+        text {
+          fill: var(--colour_secondary);
+          font-size: 1.2rem;
+          font-family: "Sora", sans-serif;
+          font-weight: 600;
+        }
 
         [open] & {
           translate: 0% 0%;
+        }
+
+        &:hover {
+          opacity: 1;
+
+          svg {
+            right: -2px;
+            bottom: -2px;
+          }
         }
       }
 
@@ -242,16 +254,35 @@ export class ImMockupNotice extends LitElement {
     this.dialog.showModal(); // temp
   }
 
+  renderCircularText(content: string, radius: number = 100, centreX = 0, centreY = 0, startOffset = 0, textLength = 100) {
+    const randomId = "circulrText-" + Math.random().toString(36).substring(2, 15);
+    return html`
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path id="${randomId}"
+        d="
+          M ${centreX - radius}, ${centreY}
+          a ${radius},${radius} 0 1,1 ${2 * radius},0
+          ${radius},${radius} 0 1,1 ${-2 * radius},0
+        "
+      /> 
+      <text>
+        <textPath startOffset="${startOffset}%" textLength="${textLength}%"  href="#${randomId}">${content}</textPath>
+      </text>
+    </svg>
+    `;
+  }
+
+
   render() {
     return html`
       <div class="wrapper">
         <button id="promptButton" type="button" aria-label="prompt mock notice" @click="${() => this.dialog.showModal()}"></button>
         <dialog id="dialog">
-          <button id="dialogCloseButton" @click="${() => this.dialog.close()}"></button>
+          <button id="dialogCloseButton" @click="${() => this.dialog.close()}">${this.renderCircularText('CLOSE', 90, 90 + 20, 90 + 20, 3)}</button>
           <article class="dialog-content">
             <header>
               <p>
-                You are viewing a mockup site of <a target="_blank" .href=${this.href}>${this.label}</a>, 
+                You are viewing a mockup site of <a target="_blank" .href=${this.href}>${this.label}</a>,
                 which may or may not have modifications or alterations from the 
                 actual site to demostrate a certain functionality or purpose.
               </p>
