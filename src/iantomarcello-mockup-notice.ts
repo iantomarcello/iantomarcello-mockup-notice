@@ -43,8 +43,8 @@ export class ImMockupNotice extends LitElement {
       }
 
       #promptButton {
-        --size: 2rem;
-        width: min(45px, var(--size));
+        --prompt_size: 2rem;
+        width: min(45px, var(--prompt_size));
         aspect-ratio: 1;
         display: block;
         position: fixed;
@@ -97,8 +97,6 @@ export class ImMockupNotice extends LitElement {
       }
 
       #dialog {
-        // width: 90vw;
-        // height: 60vh;
         font-size: 1rem;
         font-family: "Sora", sans-serif;
         color: var(--colour_primary_dark);
@@ -115,70 +113,67 @@ export class ImMockupNotice extends LitElement {
       }
 
       .dialog-content {
+        --cutout_size: 86px;
         --shape_inside: var(--colour_secondary);
         --shape_outside: transparent;
+        --shape_size: calc(var(--size) + 40px);
         --shape: radial-gradient(
           circle at right bottom,
-          var(--colour_secondary),
-          var(--colour_secondary) calc(var(--size)),
-          transparent calc(var(--size)  + 1px)
+          var(--shape_outside),
+          var(--shape_outside) var(--cutout_size),
+          var(--shape_inside) calc(var(--cutout_size)  + 1px),
+          var(--shape_inside) var(--size),
+          var(--shape_outside) calc(var(--size)  + 1px)
         );
-        width: var(--size);
-        height: var(--size);
-        mask-image: var(--shape);
+        width: var(--shape_size);
+        height: var(--shape_size);
         position: fixed;
         bottom: 0;
         right: 0;
-        padding-right: 1ch;
-        padding-left: 1ch;
+
+        /* The sector shape */
+        mask-image: var(--shape);
+        background-image: var(--shape);
         overflow: auto;
+        scrollbar-width: thin;
 
         @container (width < 460px) {
           --size: 100vw;
         }
 
-        &::before, &::after {
-          content: "";
-        }
-
-        &::before {
-          width: 100%;
-          height: 100%;
-        }
-
         /* The shape -outside to keep text inside. */
         &::before {
+          content: "";
+          width: 100%;
+          height: 100%;
           float: left;
-          shape-outside: var(--shape);
           shape-outside: radial-gradient(
             circle at right bottom,
-            transparent,
-            transparent calc(var(--size)),
-            var(--colour_secondary) calc(var(--size)  + 1px)
+            var(--shape_outside),
+            var(--shape_outside) calc(var(--size)),
+            var(--shape_inside) calc(var(--size)  + 1px)
           );
+
+          // shape-outside: radial-gradient(
+          //   circle at right bottom,
+          //   var(--shape_inside),
+          //   var(--shape_inside) var(--cutout_size),
+          //   var(--shape_outside) calc(var(--cutout_size)  + 1px),
+          //   var(--shape_outside) calc(var(--size)),
+          //   var(--shape_inside) calc(var(--size)  + 1px)
+          // );
           shape-image-threshold: 0.1;
-          shape-margin: 5%;
+          shape-margin: 3%;
           animation-name: moveShapeOutside;
           animation-duration: 1ms; /* Firefox requires this to apply the animation */
           animation-direction: alternate;
           animation-timeline: scroll(block nearest);
         }
 
-        /* The sector shape */
-        &::after {
-          width: 100%;
-          height: 100%;
-          background-image: var(--shape);
-          position: fixed;
-          top: 0;
-          left: 0;
-          z-index: -1;
+        header {
+          padding-top: 3rem;
         }
 
-        header {
-            padding-top: 1.8em;
-            text-align: right;
-        }
       }
 
       #dialogCloseButton {
