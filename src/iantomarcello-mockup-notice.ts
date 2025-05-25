@@ -250,8 +250,12 @@ export class ImMockupNotice extends LitElement {
     `
   ];
 
-  protected firstUpdated(_changedProperties: PropertyValues): void {
-    this.dialog.showModal(); // temp
+  showModal(): void {
+    this.dialog.showModal();
+  }
+
+  close(): void {
+    this.dialog.close();
   }
 
   renderCircularText(content: string, radius: number = 100, centreX = 0, centreY = 0, startOffset = 0, textLength = 100) {
