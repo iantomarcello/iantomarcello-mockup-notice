@@ -17,6 +17,7 @@ export class ImMockupNotice extends LitElement {
     css`
       :host {
         --size: 460px;
+        --size_margin: 40px;
         --scroll_shape_outside_margin_max: 50%;
 
         --colour_primary: #394c8c;
@@ -49,6 +50,7 @@ export class ImMockupNotice extends LitElement {
         aspect-ratio: 1;
         display: block;
         position: fixed;
+        z-index: 200;
         bottom: 1rem;
         right: 1rem;
         border: none;
@@ -89,7 +91,7 @@ export class ImMockupNotice extends LitElement {
           opacity: 1;
         }
 
-        &:has(+ [open]) {
+        &:has(~ :open) {
           &::before, &::after {
             translate: 120% 120%;
           }
@@ -126,7 +128,7 @@ export class ImMockupNotice extends LitElement {
         --cutout_size: 86px;
         --shape_inside: var(--colour_secondary);
         --shape_outside: transparent;
-        --shape_size: calc(var(--size) + 40px);
+        --shape_size: calc(var(--size) + var(--size_margin));
         --shape: radial-gradient(
           circle at right bottom,
           var(--shape_outside),
@@ -185,29 +187,10 @@ export class ImMockupNotice extends LitElement {
         header {
           padding-top: 3rem;
         }
-
       }
 
-      #dialogCloseButton {
-        width: 86px;
-        aspect-ratio: 1;
-        display: block;
-        padding: 0;
-        cursor: pointer;
-        filter: drop-shadow(1px 1px 1px #33333366);
-        background-color: transparent;
-        color: var(--colour_secondary);
-        border: 0;
-        border-top-left-radius: 100%;
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        z-index: 1;
+      .has-curve-text {
         overflow: hidden;
-        translate: 120% 120%;
-        transition: translate 0.6s cubic-bezier(.72,.01,.24,.98),
-                    opacity 0.1s ease-in-out;
-        opacity: 0.5;
 
         svg {
           width: 100%;
@@ -228,8 +211,29 @@ export class ImMockupNotice extends LitElement {
           font-family: "Sora", sans-serif;
           font-weight: 600;
         }
+      }
 
-        [open] & {
+      #dialogCloseButton {
+        width: 86px;
+        aspect-ratio: 1;
+        display: block;
+        padding: 0;
+        cursor: pointer;
+        filter: drop-shadow(1px 1px 1px #33333366);
+        background-color: transparent;
+        color: var(--colour_secondary);
+        border: 0;
+        border-top-left-radius: 100%;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: 1;
+        translate: 120% 120%;
+        transition: translate 0.6s cubic-bezier(.72,.01,.24,.98),
+                    opacity 0.1s ease-in-out;
+        opacity: 0.5;
+
+        :open & {
           translate: 0% 0%;
         }
 
@@ -257,6 +261,35 @@ export class ImMockupNotice extends LitElement {
         80% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.8); }
         90% { margin-top: calc(var(--scroll_shape_outside_margin_max) * 0.9); }
         100% { margin-top: var(--scroll_shape_outside_margin_max); }
+      }
+
+      .heading {
+        width: calc(var(--size) + var(--size_margin) * 2);
+        aspect-ratio: 1;
+        position: fixed;
+        z-index: 100;
+        bottom: 0;
+        right: 0;
+        margin: 0;
+        overflow: visible;
+        scale: 0.8;
+        opacity: 0;
+        transition: scale 0.3s ease-out,
+                    opacity 0.3s ease-out;
+        transform-origin: bottom right;
+
+        text {
+          fill: var(--colour_secondary);
+          font-size: 0.8rem;
+        }
+
+        &:has(+ :open) {
+          scale: 1;
+          opacity: 1;
+          transition: scale 0.6s cubic-bezier(.72,.01,.24,.98),
+                      opacity 0.5s ease-in-out;
+          transition-delay: 0.30s;
+        }
       }
 
     `
@@ -305,8 +338,14 @@ export class ImMockupNotice extends LitElement {
     return html`
       <div class="wrapper">
         <button id="promptButton" type="button" aria-label="prompt mock notice" @click="${() => this.dialog.showModal()}"></button>
+        <!-- TODO: move inside dialog if can for accessibility. -->
+        <p class="heading has-curve-text">
+          ${this.renderCircularText('THIS IS A MOCK', 87, 100, 100, 0, 130)}
+        </p>
         <dialog id="dialog">
-          <button id="dialogCloseButton" @click="${() => this.dialog.close()}">${this.renderCircularText('CLOSE', 90, 90 + 20, 90 + 20, 3)}</button>
+          <button id="dialogCloseButton" class="has-curve-text" @click="${() => this.dialog.close()}">
+            ${this.renderCircularText('CLOSE', 90, 90 + 20, 90 + 20, 3)}
+          </button>
           <article class="dialog-content">
             <header>
               <p>
