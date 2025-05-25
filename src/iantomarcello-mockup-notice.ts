@@ -106,9 +106,19 @@ export class ImMockupNotice extends LitElement {
         margin: 0;
         margin-block-start: auto;
         margin-inline-start: auto;
+        --deg: 360deg;
+        mask-image: conic-gradient(at bottom right, transparent var(--deg), black calc(var(--deg) - 1deg), black);
+        transition: --deg 0.6s cubic-bezier(.72,.01,.24,.98),
+          overlay 0.6s ease-out allow-discrete,
+          display 0.6s ease-out allow-discrete
+        ;
 
-        @starting-style {
-          
+        &:open {
+          --deg: 270deg;
+
+          @starting-style {
+            --deg: 360deg;
+          }
         }
       }
 
@@ -127,9 +137,11 @@ export class ImMockupNotice extends LitElement {
         );
         width: var(--shape_size);
         height: var(--shape_size);
+        /*
         position: fixed;
         bottom: 0;
         right: 0;
+        */
 
         /* The sector shape */
         mask-image: var(--shape);
@@ -250,6 +262,15 @@ export class ImMockupNotice extends LitElement {
     `
   ];
 
+  init() {
+    window.CSS.registerProperty({
+      name: "--deg",
+      syntax: "<angle>",
+      inherits: false,
+      initialValue: "0deg",
+    });
+  }
+
   showModal(): void {
     this.dialog.showModal();
   }
@@ -276,6 +297,9 @@ export class ImMockupNotice extends LitElement {
     `;
   }
 
+  protected firstUpdated(_changedProperties: PropertyValues) {
+    this.init();
+  }
 
   render() {
     return html`
