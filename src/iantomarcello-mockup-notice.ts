@@ -69,7 +69,8 @@ export class ImMockupNotice extends LitElement {
           left: 50%;
           border-radius: 50%;
           translate: -50% -50%;
-          transition: translate 0.6s cubic-bezier(.72,.01,.24,.98);
+          transition: translate 0.6s cubic-bezier(.72,.01,.24,.98),
+            outline-offset 0.1s cubic-bezier(.72,.01,.24,.98);
         }
 
         &::after {
@@ -87,8 +88,11 @@ export class ImMockupNotice extends LitElement {
           transition-delay: 0.1s
         }
 
-        &:hover {
+        &:is(:hover, :focus) {
           opacity: 1;
+          &::before {
+            outline-offset: 6px;
+          }
         }
 
         &:has(~ :open) {
@@ -237,7 +241,7 @@ export class ImMockupNotice extends LitElement {
           translate: 0% 0%;
         }
 
-        &:hover {
+        &:is(:hover, :focus) {
           opacity: 1;
 
           svg {
