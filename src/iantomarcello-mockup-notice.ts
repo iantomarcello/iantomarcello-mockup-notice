@@ -50,7 +50,7 @@ export class ImMockupNotice extends LitElement {
         aspect-ratio: 1;
         display: block;
         position: fixed;
-        z-index: 200;
+        z-index: 100;
         bottom: 1rem;
         right: 1rem;
         border: none;
@@ -225,9 +225,9 @@ export class ImMockupNotice extends LitElement {
         border: 0;
         border-top-left-radius: 100%;
         position: fixed;
+        z-index: 101;
         bottom: 0;
         right: 0;
-        z-index: 1;
         translate: 120% 120%;
         transition: translate 0.6s cubic-bezier(.72,.01,.24,.98),
                     opacity 0.1s ease-in-out;
@@ -264,8 +264,9 @@ export class ImMockupNotice extends LitElement {
       }
 
       .heading {
-        width: calc(var(--size) + var(--size_margin) * 2);
+        width: calc(var(--size) + var(--size_margin) + 1.7lh);
         aspect-ratio: 1;
+        font-size: 16px;
         position: fixed;
         z-index: 100;
         bottom: 0;
@@ -280,10 +281,10 @@ export class ImMockupNotice extends LitElement {
 
         text {
           fill: var(--colour_secondary);
-          font-size: 0.8rem;
+          font-size: 0.5rem;
         }
 
-        &:has(+ :open) {
+        :open & {
           scale: 1;
           opacity: 1;
           transition: scale 0.6s cubic-bezier(.72,.01,.24,.98),
@@ -338,14 +339,13 @@ export class ImMockupNotice extends LitElement {
     return html`
       <div class="wrapper">
         <button id="promptButton" type="button" aria-label="prompt mock notice" @click="${() => this.dialog.showModal()}"></button>
-        <!-- TODO: move inside dialog if can for accessibility. -->
-        <p class="heading has-curve-text">
-          ${this.renderCircularText('THIS IS A MOCK', 87, 100, 100, 0, 130)}
-        </p>
         <dialog id="dialog">
           <button id="dialogCloseButton" class="has-curve-text" @click="${() => this.dialog.close()}">
             ${this.renderCircularText('CLOSE', 90, 90 + 20, 90 + 20, 3)}
           </button>
+          <h2 class="heading has-curve-text">
+            ${this.renderCircularText('THIS IS A MOCK', 87, 100, 100, 0.5, 130)}
+          </h2>
           <article class="dialog-content">
             <header>
               <p>
