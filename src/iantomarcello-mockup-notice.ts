@@ -1,10 +1,8 @@
 import { html, LitElement, css, PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 
 /**
- * Imports an SVG and embed as HTML.
- *
- * @warning SVG rendered is not sanitized. Ensure the SVG file imported is a resource that you trust.
+ * A dialog for showing description that this is a mockup for Ian Yong's work.
  */
 @customElement('iantomarcello-mockup-notice')
 export class ImMockupNotice extends LitElement {
@@ -112,6 +110,9 @@ export class ImMockupNotice extends LitElement {
         margin: 0;
         margin-block-start: auto;
         margin-inline-start: auto;
+        max-width: initial;
+        max-height: initial;
+
         --deg: 360deg;
         mask-image: conic-gradient(at bottom right, transparent var(--deg), black calc(var(--deg) - 1deg), black);
         transition: --deg 0.6s cubic-bezier(.72,.01,.24,.98),
@@ -141,13 +142,9 @@ export class ImMockupNotice extends LitElement {
           var(--shape_inside) var(--size),
           var(--shape_outside) calc(var(--size)  + 1px)
         );
-        width: var(--shape_size);
+        width: min(100dvw, var(--shape_size));
         height: var(--shape_size);
-        /*
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        */
+        padding-inline: 14px;
 
         /* The sector shape */
         mask-image: var(--shape);
@@ -155,11 +152,8 @@ export class ImMockupNotice extends LitElement {
         overflow: auto;
         scrollbar-width: thin;
 
-        @container (width < 460px) {
-          --size: 100vw;
-        }
-
         /* The shape -outside to keep text inside. */
+        /* TODO: No perfect, consider using both float left and right using appropriate shapes. */
         &::before {
           content: "";
           width: 100%;
@@ -172,14 +166,6 @@ export class ImMockupNotice extends LitElement {
             var(--shape_inside) calc(var(--size)  + 1px)
           );
 
-          // shape-outside: radial-gradient(
-          //   circle at right bottom,
-          //   var(--shape_inside),
-          //   var(--shape_inside) var(--cutout_size),
-          //   var(--shape_outside) calc(var(--cutout_size)  + 1px),
-          //   var(--shape_outside) calc(var(--size)),
-          //   var(--shape_inside) calc(var(--size)  + 1px)
-          // );
           shape-image-threshold: 0.1;
           shape-margin: 3%;
           animation-name: moveShapeOutside;
@@ -218,7 +204,7 @@ export class ImMockupNotice extends LitElement {
       }
 
       #dialogCloseButton {
-        width: 86px;
+        width: calc(86px * 2);
         aspect-ratio: 1;
         display: block;
         padding: 0;
@@ -227,28 +213,29 @@ export class ImMockupNotice extends LitElement {
         background-color: transparent;
         color: var(--colour_secondary);
         border: 0;
-        border-top-left-radius: 100%;
         position: fixed;
         z-index: 101;
         bottom: 0;
         right: 0;
-        translate: 120% 120%;
-        transition: translate 0.6s cubic-bezier(.72,.01,.24,.98),
-                    opacity 0.1s ease-in-out;
-        opacity: 0.5;
+        translate: 50% 50%;
 
-        :open & {
-          translate: 0% 0%;
-        }
+        circular-text {
+          --offset: 266;
+          --spacing: 4;
+          translate: 20% 20%;
+          transition: translate 0.6s cubic-bezier(.72,.01,.24,.98),
+                      opacity 0.1s ease-in-out;
+          opacity: 0.5;
 
-        &:is(:hover, :focus) {
-          opacity: 1;
-
-          svg {
-            right: -2px;
-            bottom: -2px;
+          :open & {
+            translate: 2% 2%;
           }
         }
+
+        &:is(:hover, :focus) circular-text {
+          opacity: 1;
+        }
+
       }
 
       /* Move shape-outside on scroll. */
@@ -268,7 +255,7 @@ export class ImMockupNotice extends LitElement {
       }
 
       .heading {
-        width: calc(var(--size) + var(--size_margin) + 1.7lh);
+        width: calc((var(--size) + var(--size_margin)) * 2);
         aspect-ratio: 1;
         font-size: 16px;
         position: fixed;
@@ -277,18 +264,33 @@ export class ImMockupNotice extends LitElement {
         right: 0;
         margin: 0;
         overflow: visible;
-        scale: 0.8;
-        opacity: 0;
-        transition: scale 0.3s ease-out,
-                    opacity 0.3s ease-out;
-        transform-origin: bottom right;
+        pointer-events: none;
+        translate: 50% 50%;
 
-        text {
-          fill: var(--colour_secondary);
-          font-size: 0.5rem;
+        circular-text {
+          --offset: 268;
+          --spacing: 1.5;
+          scale: 0.8;
+          opacity: 0;
+          font-size: 2rem;
+          color: var(--colour_secondary);
+          transition: scale 0.3s ease-out,
+                      opacity 0.3s ease-out;
+
+          @media (width < 500px) {
+            font-size: 1.5rem;
+            --offset: 300;
+            --spacing: 1;
+          };
+
+          @media (width < 400px) {
+            font-size: 1.3rem;
+            --offset: 313;
+            --spacing: 0.8;
+          };
         }
 
-        :open & {
+        :open & circular-text{
           scale: 1;
           opacity: 1;
           transition: scale 0.6s cubic-bezier(.72,.01,.24,.98),
@@ -317,24 +319,6 @@ export class ImMockupNotice extends LitElement {
     this.dialog.close();
   }
 
-  renderCircularText(content: string, radius: number = 100, centreX = 0, centreY = 0, startOffset = 0, textLength = 100) {
-    const randomId = "circulrText-" + Math.random().toString(36).substring(2, 15);
-    return html`
-    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <path id="${randomId}"
-        d="
-          M ${centreX - radius}, ${centreY}
-          a ${radius},${radius} 0 1,1 ${2 * radius},0
-          ${radius},${radius} 0 1,1 ${-2 * radius},0
-        "
-      /> 
-      <text>
-        <textPath startOffset="${startOffset}%" textLength="${textLength}%"  href="#${randomId}">${content}</textPath>
-      </text>
-    </svg>
-    `;
-  }
-
   protected firstUpdated(_changedProperties: PropertyValues) {
     this.init();
   }
@@ -345,10 +329,10 @@ export class ImMockupNotice extends LitElement {
         <button id="promptButton" type="button" aria-label="prompt mock notice" @click="${() => this.dialog.showModal()}"></button>
         <dialog id="dialog">
           <button id="dialogCloseButton" class="has-curve-text" @click="${() => this.dialog.close()}">
-            ${this.renderCircularText('CLOSE', 90, 90 + 20, 90 + 20, 3)}
+            <circular-text>CLOSE</circular-text>
           </button>
           <h2 class="heading has-curve-text">
-            ${this.renderCircularText('THIS IS A MOCK', 87, 100, 100, 0.5, 130)}
+            <circular-text>THIS IS A MOCK</circular-text>
           </h2>
           <article class="dialog-content">
             <header>
