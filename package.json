@@ -8,11 +8,11 @@
   "license": "ISC",
   "exports": {
     ".": {
-      "import": "./dist/svg-import.es.js",
-      "require": "./dist/svg-import.umd.js"
+      "import": "./dist/iantomarcello-mockup-notice.es.js",
+      "require": "./dist/iantomarcello-mockup-notice.umd.js"
     }
   },
-  "types": "types/svg-import.d.ts",
+  "types": "types/iantomarcello-mockup-notice.d.ts",
   "files": [
     "dist",
     "types"

@@ -1,19 +1,72 @@
-import { html, LitElement, css, PropertyValues } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
-import './circular-text';
+(function(a,i){typeof exports=="object"&&typeof module<"u"?i(exports,require("lit"),require("lit/decorators.js")):typeof define=="function"&&define.amd?define(["exports","lit","lit/decorators.js"],i):(a=typeof globalThis<"u"?globalThis:a||self,i(a.ImMockupNotice={},a.lit,a.decorators_js))})(this,function(a,i,l){"use strict";var u=Object.getOwnPropertyDescriptor,h=(o,e,r,n)=>{for(var t=n>1?void 0:n?u(e,r):e,s=o.length-1,c;s>=0;s--)(c=o[s])&&(t=c(t)||t);return t};let d=class extends i.LitElement{get _slottedChildren(){var e;const o=(e=this.shadowRoot)==null?void 0:e.querySelector("slot");return(o==null?void 0:o.assignedNodes({flatten:!0}))||[]}firstUpdated(o){var r;const e=(r=this.shadowRoot)==null?void 0:r.querySelector("slot");e&&(e.addEventListener("slotchange",()=>{this.requestUpdate()}),this._slottedChildren.length>0&&e.setAttribute("hidden",""))}render(){var o,e;return i.html`
+      <slot></slot>
+      <div class="ring">
+        ${((o=this._slottedChildren)==null?void 0:o.length)<1?"null":(e=this._slottedChildren)==null?void 0:e.map(r=>{var t;return[...((t=r.textContent)==null?void 0:t.trim()).split("")].map((s,c)=>i.html`<span class="character" style="--index: ${c}">${s}</span>`)})}
+      </div>
+      `}};d.styles=[i.css`
+    :host {
+      --offset: 0;
+      --spacing: 1;
+      display: block;
+      aspect-ratio: 1;
+    }
 
-/**
- * A dialog for showing description that this is a mockup for Ian Yong's work.
- */
-@customElement('iantomarcello-mockup-notice')
-export class ImMockupNotice extends LitElement {
+    .ring {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
 
-  @property({ type: String }) label = 'Mockup Site';
-  @property({ type: String }) href!:string;
-  @query('#dialog') dialog!: HTMLDialogElement;
+    .character {
+      --index: sibling-index();
+      height: 50%;
+      position: absolute;
+      top: 0%;
+      left: 50%;
+      translate: -50% 0;
+      transform-origin: center bottom;
+      rotate: calc(var(--index) * (4deg * var(--spacing)) + (var(--offset) * 1deg));
 
-  static styles = [
-    css`
+      @supports(width: calc(sibling-index() * 1px)) {
+        rotate: calc(sibling-index() * (4deg * var(--spacing)) + (var(--offset) * 1deg));
+      }
+
+      @container style(--spacing: full) {
+        rotate: calc((sibling-index() / sibling-count() * 360deg) + (var(--offset) * 1deg));
+      }
+    }
+  `],d=h([l.customElement("circular-text")],d);var g=Object.defineProperty,m=Object.getOwnPropertyDescriptor,p=(o,e,r,n)=>{for(var t=n>1?void 0:n?m(e,r):e,s=o.length-1,c;s>=0;s--)(c=o[s])&&(t=(n?c(e,r,t):c(t))||t);return n&&t&&g(e,r,t),t};a.ImMockupNotice=class extends i.LitElement{constructor(){super(...arguments),this.label="Mockup Site"}init(){window.CSS.registerProperty({name:"--deg",syntax:"<angle>",inherits:!1,initialValue:"0deg"})}showModal(){this.dialog.showModal()}close(){this.dialog.close()}firstUpdated(e){this.init()}render(){return i.html`
+      <div class="wrapper">
+        <button id="promptButton" type="button" aria-label="prompt mock notice" @click="${()=>this.dialog.showModal()}"></button>
+        <dialog id="dialog">
+          <button id="dialogCloseButton" class="has-curve-text" @click="${()=>this.dialog.close()}">
+            <circular-text>CLOSE</circular-text>
+          </button>
+          <h2 class="heading has-curve-text">
+            <circular-text>THIS IS A MOCK</circular-text>
+          </h2>
+          <article class="dialog-content">
+            <header>
+              <p>
+                You are viewing a mockup site of <a target="_blank" .href=${this.href}>${this.label}</a>,
+                which may or may not have modifications or alterations from the 
+                actual site to demostrate a certain functionality or purpose.
+              </p>
+            </header>
+            <section><slot></slot></section>
+            <footer>
+              <p>In any case, enjoy what you see. 😁</p>
+              <p>
+                <small>
+                  Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
+                  Check out my <a href="https://github.com/iantomarcello" target="_blank">GitHub</a>.
+                </small>
+              </p>
+            </footer>
+          </article>
+        </dialog>
+      </div>
+    `}},a.ImMockupNotice.styles=[i.css`
       :host {
         --size: 460px;
         --size_margin: 40px;
@@ -300,68 +353,4 @@ export class ImMockupNotice extends LitElement {
         }
       }
 
-    `
-  ];
-
-  init() {
-    window.CSS.registerProperty({
-      name: "--deg",
-      syntax: "<angle>",
-      inherits: false,
-      initialValue: "0deg",
-    });
-  }
-
-  showModal(): void {
-    this.dialog.showModal();
-  }
-
-  close(): void {
-    this.dialog.close();
-  }
-
-  protected firstUpdated(_changedProperties: PropertyValues) {
-    this.init();
-  }
-
-  render() {
-    return html`
-      <div class="wrapper">
-        <button id="promptButton" type="button" aria-label="prompt mock notice" @click="${() => this.dialog.showModal()}"></button>
-        <dialog id="dialog">
-          <button id="dialogCloseButton" class="has-curve-text" @click="${() => this.dialog.close()}">
-            <circular-text>CLOSE</circular-text>
-          </button>
-          <h2 class="heading has-curve-text">
-            <circular-text>THIS IS A MOCK</circular-text>
-          </h2>
-          <article class="dialog-content">
-            <header>
-              <p>
-                You are viewing a mockup site of <a target="_blank" .href=${this.href}>${this.label}</a>,
-                which may or may not have modifications or alterations from the 
-                actual site to demostrate a certain functionality or purpose.
-              </p>
-            </header>
-            <section><slot></slot></section>
-            <footer>
-              <p>In any case, enjoy what you see. 😁</p>
-              <p>
-                <small>
-                  Have a look at my <a href="https://iantomarcello.com" target="_blank">PWA Website</a>. or;
-                  Check out my <a href="https://github.com/iantomarcello" target="_blank">GitHub</a>.
-                </small>
-              </p>
-            </footer>
-          </article>
-        </dialog>
-      </div>
-    `;
-  }
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'iantomarcello-mockup-notice': ImMockupNotice,
-  }
-}
+    `],p([l.property({type:String})],a.ImMockupNotice.prototype,"label",2),p([l.property({type:String})],a.ImMockupNotice.prototype,"href",2),p([l.query("#dialog")],a.ImMockupNotice.prototype,"dialog",2),a.ImMockupNotice=p([l.customElement("iantomarcello-mockup-notice")],a.ImMockupNotice),Object.defineProperty(a,Symbol.toStringTag,{value:"Module"})});

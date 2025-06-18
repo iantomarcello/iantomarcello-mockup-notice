@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
     <title></title>
-    <script type="module" src="/src/iantomarcello-mockup-notice.ts"></script>
+    <script type="module" src="/dist/browser/iantomarcello-mockup-notice.iife.js"></script>
     <style>
       body {
         background-color: silver;
@@ -44,7 +44,11 @@
 
     <section id="container">
       <div id="content_1"></div>
-      <div id="content_2"></div>
+      <div id="content_2">
+        <circular-text style="width: 300px; margin: 0 auto; background-color: grey;">This is a test for the circular text</circular-text>
+        <button onclick="console.log(this.previousElementSibling); this.previousElementSibling.innerHTML = 'I AM CHANGED?!'"> change it </button>
+        <hr>
+      </div>
       <div id="content_3"></div>
       <div id="content_4"></div>
       <div id="content_5"></div>
@@ -54,6 +58,11 @@
 
     <iantomarcello-mockup-notice href="https://github.com/iantomarcello" label="Potassium" open>
       <p>Dynamic statement goes here.</p>
+      <p>Dynamic statement goes here.</p>
+      <p>Dynamic statement goes here.</p>
+      <p>Dynamic statement goes here.</p>
+      <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, perferendis illo nisi quam ullam temporibus voluptas beatae error aut dicta officia! Optio amet eaque aliquam! Praesentium molestias ea commodi quam.</p> -->
+      <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias, perferendis illo nisi quam ullam temporibus voluptas beatae error aut dicta officia! Optio amet eaque aliquam! Praesentium molestias ea commodi quam.</p> -->
       <p>And here's a <a href="">link</a></p>
     </iantomarcello-mockup-notice>
 
@@ -88,6 +97,10 @@
       document.querySelectorAll('#container div').forEach(div => {
         observer.observe(div);
       })
+
+      setTimeout(() => {
+        document.querySelector('iantomarcello-mockup-notice').showModal();
+      }, 1000);
 
     </script>
   </body>
